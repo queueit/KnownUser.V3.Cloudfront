@@ -1,0 +1,1 @@
+﻿exports = module.exports = `PLEASE GO TO URL https://[your-customer-id].queue-it.net/status/integrationconfig/[your-customer-id], COPY AND PASTE THE JSON VALUE HERE ` ;
