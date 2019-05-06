@@ -5,21 +5,14 @@ const integrationConfig = require("./integrationConfig.js");
 const httpContextProvider = require("./cloudFrontHttpContextProvider.js");
 const querystringParser = require('querystring');
 const knownUser = QueueIT.KnownUserV3.SDK.KnownUser;
-const CLOUDFRONT_SDK_VERSION ="1.0.0";
+const helpers = require("./queueitHelpers.js");
 
-function configureKnownUserHashing() {
-    var utils = QueueIT.KnownUserV3.SDK.Utils;
-    utils.generateSHA256Hash = function (secretKey, stringToHash) {
-        const crypto = require('crypto');
-        const hash = crypto.createHmac('sha256', secretKey)
-            .update(stringToHash)
-            .digest('hex');
-        return hash;
-    };
-}
+
+
 exports.handler = (event, context, callback) => {
     try {
-        configureKnownUserHashing();
+        helpers.configureKnownUserHashing();
+   
         const request = event.Records[0].cf.request;
         const response = {
             headers: {}
@@ -63,7 +56,7 @@ exports.handler = (event, context, callback) => {
             if (validationResult.isAjaxResult) {
                 var headerName =  validationResult.getAjaxQueueRedirectHeaderKey();
                 // In case of ajax call send the user to the queue by sending a custom queue-it header and redirecting user to queue from javascript
-                response.headers[headerName] = [{ key: headerName, value: validationResult.getAjaxRedirectUrl() + QueueIT.KnownUserV3.SDK.Utils.encodeUrl('&cloudfrontsdkver=' + CLOUDFRONT_SDK_VERSION) }];
+                response.headers[headerName] = [{ key: headerName, value: helpers.addKUPlatformVersion( validationResult.getAjaxRedirectUrl()) }];
                 response.status = '200';
                 response.statusDescription = 'OK';
                 callback(null, response);
@@ -75,7 +68,7 @@ exports.handler = (event, context, callback) => {
                 response.statusDescription = 'Found';
                 response.headers['location']= [{
                     key: 'Location',
-                    value: validationResult.redirectUrl + QueueIT.KnownUserV3.SDK.Utils.encodeUrl('&cloudfrontsdkver=' + CLOUDFRONT_SDK_VERSION)
+                    value: helpers.addKUPlatformVersion(validationResult.redirectUrl)
                 }];
                 callback(null, response);
             }
