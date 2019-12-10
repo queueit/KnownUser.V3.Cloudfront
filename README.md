@@ -12,6 +12,9 @@ The most important fields of the `queueittoken` are:
 After returning  from the queue, the script will let user continue its request to your backend and will add a cookie to the user browser (the code in ViewerResponse will do that) containing a valid queue session and since then all the requests of that specific user will pass the validation from ViewerRequest function without going to the queue since it has a valid queue session cookie.
 
 ## Instruction
-Please create two lambda edge functions one for ViewerRequest and one for ViewerResponse and put the code from this repository there respectively. Go to URL `https://[your-customer-id].queue-it.net/status/integrationconfig/[your-customer-id]` and copy the value and set the JSON string in `integrationConfig.js`in ViewerRequest. Set your CustomerId and SecretKey in `index.js` in ViewerRequest function. Finally, define the correct routes you want to protect by queue and set events ViewerRequest and ViewerResponse to the right function.
+
+- Set your CustomerId and SecretKey in `index.js` file in ViewerRequest package
+- Create two lambda edge functions one for ViewerRequest and one for ViewerResponse and put the code from this repository there respectively. 
+- Define your desired behaviours where you want to be protected by queue and set CloudFront events  ViewerRequest and ViewerResponse to function you have already created.
 
 >Please contact [queue-it support](https://support.queue-it.com/hc/en-us) for further information and intruction.
