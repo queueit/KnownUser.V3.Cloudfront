@@ -17,7 +17,11 @@
                     return "";
                 },
                 getAbsoluteUri: function () {
-                    return `https://${request.headers.host[0].value}${request.uri}?${request.querystring}`;
+                    let url = `https://${request.headers.host[0].value}${request.uri}`;
+                    if (request.querystring) {
+                        url += `?${request.querystring}`;
+                    }
+                    return url;
                 },
                 getUserHostAddress: function () {
                     return request.clientIp;
