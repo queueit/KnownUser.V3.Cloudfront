@@ -20,7 +20,7 @@ exports.getConfig = async function (configUrl) {
             resp.on('end', () => {
                 if (resp.statusCode == 200) {
                         var newCached = {
-                            expirationTime: new Date() + CacheTimeoutMS,
+                            expirationTime:  (Date.now()) + CacheTimeoutMS,
                             integrationConfig: data
                         };
                         GlobalCache = newCached;
