@@ -17,4 +17,17 @@ After returning  from the queue, the script will let user continue its request t
 - Create two lambda edge functions one for ViewerRequest and one for ViewerResponse and put the code from this repository there respectively. 
 - Define your desired behaviours where you want to be protected by queue and set CloudFront events  ViewerRequest and ViewerResponse to function you have already created.
 
+### Protecting AJAX calls
+If you need to protect AJAX calls beside page loads you need to add the below JavaScript tags to your pages:
+```
+<script type="text/javascript" src="//static.queue-it.net/script/queueclient.min.js"></script>
+<script
+ data-queueit-intercept-domain="{YOUR_CURRENT_DOMAIN}"
+   data-queueit-intercept="true"
+  data-queueit-c="{YOUR_CUSTOMER_ID}"
+  type="text/javascript"
+  src="//static.queue-it.net/script/queueconfigloader.min.js">
+</script>
+```
+
 >Please contact [queue-it support](https://support.queue-it.com/hc/en-us) for further information and intruction.
