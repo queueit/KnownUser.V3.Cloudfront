@@ -13,7 +13,7 @@ After returning  from the queue, the script will let user continue its request t
 
 ## Instruction
 
-- Set your CustomerId and SecretKey in `index.js` file in ViewerRequest package
+- Set your CustomerId, SecretKey and API key in `index.js` file in ViewerRequest package
 - Create two lambda edge functions one for ViewerRequest and one for ViewerResponse and put the code from this repository there respectively. 
 - Define your desired behaviours where you want to be protected by queue and set CloudFront events  ViewerRequest and ViewerResponse to function you have already created.
 
