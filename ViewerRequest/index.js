@@ -1,7 +1,7 @@
 ﻿'use strict';
 const CustomerId = "YOUR CUSTOMERID HERE";
 const SecretKey = "YOUR SECRETE KEY HERE";
-
+const APIKey = "YOUR API KEY HERE";
 
 const querystringParser = require('querystring');
 const QueueIT = require("./sdk/queueit-knownuserv3-sdk.js");
@@ -39,7 +39,7 @@ async function handleRequest(request) {
     var requestUrl = httpContext.getHttpRequest().getAbsoluteUri();
     var requestUrlWithoutToken = requestUrl.replace(new RegExp("([\?&])(" + knownUser.QueueITTokenKey + "=[^&]*)", 'i'), "");
     requestUrlWithoutToken = requestUrlWithoutToken.replace(new RegExp("[?]$"), "");
-    var integrationConfig = await integrationConfigProvider.getConfig(configUrl);
+    var integrationConfig = await integrationConfigProvider.getConfig(configUrl, APIKey);
 
     var validationResult = knownUser.validateRequestByIntegrationConfig(
         requestUrlWithoutToken, queueitToken, integrationConfig,
