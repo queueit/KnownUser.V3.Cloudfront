@@ -5,13 +5,19 @@ const CacheTimeoutMS = 5 * 60 * 1000;
 const RequestTimeoutMS = 1000;
 let GlobalCache = null;
 
-exports.getConfig = async function (configUrl) {
+exports.getConfig = async function (configUrl, apiKey) {
     return new Promise((resolve, reject) => {
         if (isGLobalCacheValid()) {
             resolve(GlobalCache.integrationConfig);
             return;
         }
-        let request = https.get(configUrl, (resp) => {
+        const options = {
+            hostname: configUrl,
+            path: '/',
+            method: 'GET',
+            headers: { 'api-key': apiKey}
+};
+        let request = https.request(options, (resp) => {
             let data = '';
             resp.setEncoding('utf8');
             resp.on('data', (chunk) => {
