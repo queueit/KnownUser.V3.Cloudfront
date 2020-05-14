@@ -33,7 +33,7 @@ async function handleRequest(request) {
     const response = {
         headers: {}
     };
-    let configUrl = `https://${CustomerId}.queue-it.net/status/integrationconfig/${CustomerId}`;
+    let configUrl = `https://${CustomerId}.queue-it.net/status/integrationconfig/secure/${CustomerId}`;
     let httpContext = httpContextProvider.getCloudFrontHttpContext(request, response);
     var queueitToken = querystringParser.parse(request.querystring)[knownUser.QueueITTokenKey];
     var requestUrl = httpContext.getHttpRequest().getAbsoluteUri();
