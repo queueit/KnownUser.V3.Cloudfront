@@ -32,14 +32,13 @@ async function handleRequest(request) {
     helpers.configureKnownUserHashing();
     const response = {
         headers: {}
-    };
-    let configUrl = `https://${CustomerId}.queue-it.net/status/integrationconfig/secure/${CustomerId}`;
+    };    
     let httpContext = httpContextProvider.getCloudFrontHttpContext(request, response);
     var queueitToken = querystringParser.parse(request.querystring)[knownUser.QueueITTokenKey];
     var requestUrl = httpContext.getHttpRequest().getAbsoluteUri();
     var requestUrlWithoutToken = requestUrl.replace(new RegExp("([\?&])(" + knownUser.QueueITTokenKey + "=[^&]*)", 'i'), "");
     requestUrlWithoutToken = requestUrlWithoutToken.replace(new RegExp("[?]$"), "");
-    var integrationConfig = await integrationConfigProvider.getConfig(configUrl, APIKey);
+    var integrationConfig = await integrationConfigProvider.getConfig(CustomerId, APIKey);
 
     var validationResult = knownUser.validateRequestByIntegrationConfig(
         requestUrlWithoutToken, queueitToken, integrationConfig,
