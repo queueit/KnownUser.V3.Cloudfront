@@ -5,19 +5,20 @@ const CacheTimeoutMS = 5 * 60 * 1000;
 const RequestTimeoutMS = 1000;
 let GlobalCache = null;
 
-exports.getConfig = async function (configUrl, apiKey) {
+exports.getConfig = async function (customerId, apiKey) {
     return new Promise((resolve, reject) => {
         if (isGLobalCacheValid()) {
             resolve(GlobalCache.integrationConfig);
             return;
         }
         const options = {
-            hostname: configUrl,
-            path: '/',
+            hostname: `${customerId}.test.queue-it.net`,
+            path: `/status/integrationconfig/secure/${customerId}`,
             method: 'GET',
-            headers: { 'api-key': apiKey}
+            headers: { 'api-key': apiKey},
+            port: 443
 };
-        let request = https.request(options, (resp) => {
+        let request = https.get(options, (resp) => {
             let data = '';
             resp.setEncoding('utf8');
             resp.on('data', (chunk) => {
