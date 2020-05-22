@@ -1,7 +1,7 @@
 ﻿'use strict';
 const CustomerId = "YOUR CUSTOMERID HERE";
 const SecretKey = "YOUR SECRETE KEY HERE";
-
+const APIKey = "YOUR API KEY HERE";
 
 const querystringParser = require('querystring');
 const QueueIT = require("./sdk/queueit-knownuserv3-sdk.js");
@@ -32,14 +32,13 @@ async function handleRequest(request) {
     helpers.configureKnownUserHashing();
     const response = {
         headers: {}
-    };
-    let configUrl = `https://${CustomerId}.queue-it.net/status/integrationconfig/${CustomerId}`;
+    };    
     let httpContext = httpContextProvider.getCloudFrontHttpContext(request, response);
     var queueitToken = querystringParser.parse(request.querystring)[knownUser.QueueITTokenKey];
     var requestUrl = httpContext.getHttpRequest().getAbsoluteUri();
     var requestUrlWithoutToken = requestUrl.replace(new RegExp("([\?&])(" + knownUser.QueueITTokenKey + "=[^&]*)", 'i'), "");
     requestUrlWithoutToken = requestUrlWithoutToken.replace(new RegExp("[?]$"), "");
-    var integrationConfig = await integrationConfigProvider.getConfig(configUrl);
+    var integrationConfig = await integrationConfigProvider.getConfig(CustomerId, APIKey);
 
     var validationResult = knownUser.validateRequestByIntegrationConfig(
         requestUrlWithoutToken, queueitToken, integrationConfig,

@@ -1,4 +1,4 @@
-# KnownUser.V3.Cloudfront
+﻿# KnownUser.V3.Cloudfront
 The Queue-it Security Framework is used to ensure that end users cannot reach to your protected backend routes without passing the virtual queue by performing a server-side validation before processing a request. This repository is containing two AWS lambda functions you can add them in your CloudFront distribution for CloudFront Events ViewerRequest and ViewerResponse to integrate queue-it functionality for your backend.
 
 ## Introduction
@@ -13,7 +13,7 @@ After returning  from the queue, the script will let user continue its request t
 
 ## Instruction
 
-- Set your CustomerId and SecretKey in `index.js` file in ViewerRequest package
+- Set your CustomerId, SecretKey and API key in `index.js` file in ViewerRequest package
 - Create two lambda edge functions one for ViewerRequest and one for ViewerResponse and put the code from this repository there respectively. 
 - Define your desired behaviours where you want to be protected by queue and set CloudFront events  ViewerRequest and ViewerResponse to function you have already created.
 
