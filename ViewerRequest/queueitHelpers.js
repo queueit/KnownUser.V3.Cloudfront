@@ -1,4 +1,4 @@
-const CLOUDFRONT_SDK_VERSION ="1.2.2";
+const CLOUDFRONT_SDK_VERSION ="1.2.3";
 const QueueIT = require("./sdk/queueit-knownuserv3-sdk.js");
 exports.addKUPlatformVersion= function(redirectQueueUrl)
 {

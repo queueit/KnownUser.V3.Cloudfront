@@ -49,17 +49,12 @@ async function handleRequest(request) {
         response.headers['cache-control'] = [
             {
                 key: 'Cache-Control',
-                value: 'no-cache, no-store, must-revalidate'
+                value: 'no-cache, no-store, must-revalidate, max-age=0'
             }];
         response.headers['pragma'] = [
             {
                 key: 'Pragma',
                 value: 'no-cache'
-            }];
-        response.headers['pragma'] = [
-            {
-                key: 'Pragma',
-                value: 'no-cache, no-store, must-revalidate'
             }];
         response.headers['expires'] = [
             {

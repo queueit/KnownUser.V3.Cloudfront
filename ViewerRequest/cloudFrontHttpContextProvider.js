@@ -27,10 +27,16 @@
                     return request.clientIp;
                 },
                 getCookieValue: function (cookieKey) {
+
                     if (!this.parsedCookieDic) {
                         this.parsedCookieDic = __parseCookies(request.headers);
                     }
-                    return decodeURIComponent(this.parsedCookieDic[cookieKey]);
+                    var cookieValue = this.parsedCookieDic[cookieKey];
+                                        
+                    if(cookieValue)
+                        return decodeURIComponent(cookieValue);
+                    
+                    return cookieValue;
                 }
             };
             return httpRequest;
