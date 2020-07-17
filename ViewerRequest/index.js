@@ -16,14 +16,8 @@ exports.handler = async (event, context, callback) => {
         return await handleRequest(request);
     }
     catch (e) {
-        let errorText = e;
-        if (e instanceof Error) {
-            errorText = e.toString();
-        }
-        else if (typeof e == 'object') {
-            errorText = JSON.stringify(e);
-        }
-        console.log("ERROR: Queue-it Connector" + errorText);
+        let errorText = getErrorText(e);
+        console.log("ERROR: Queue-it Connector " + errorText);
         return request;
     }
 };
@@ -38,7 +32,13 @@ async function handleRequest(request) {
     var requestUrl = httpContext.getHttpRequest().getAbsoluteUri();
     var requestUrlWithoutToken = requestUrl.replace(new RegExp("([\?&])(" + knownUser.QueueITTokenKey + "=[^&]*)", 'i'), "");
     requestUrlWithoutToken = requestUrlWithoutToken.replace(new RegExp("[?]$"), "");
-    var integrationConfig = await integrationConfigProvider.getConfig(CustomerId, APIKey);
+    var integrationConfig ="";
+    try{
+        integrationConfig = await integrationConfigProvider.getConfig(CustomerId, APIKey);
+    }catch(e){
+        let errorText = getErrorText(e);
+        console.log("ERROR: Donwloading config " + errorText);
+    }
 
     var validationResult = knownUser.validateRequestByIntegrationConfig(
         requestUrlWithoutToken, queueitToken, integrationConfig,
@@ -97,4 +97,17 @@ async function handleRequest(request) {
             return request;
         }
     }
+}
+
+function getErrorText(e){
+    let errorText = e;
+        if(e instanceof Error)
+        {
+            errorText = e.toString(); 
+        }
+        else if(typeof e == 'object')
+        {
+            errorText = JSON.stringify(e);
+        }
+    return errorText;
 }
