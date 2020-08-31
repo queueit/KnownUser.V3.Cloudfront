@@ -84,7 +84,7 @@ async function handleRequest(request) {
     }
     else {
         // Request can continue - we remove queueittoken form querystring parameter to avoid sharing of user specific token
-        if (queueitToken && validationResult.actionType) {
+        if (queueitToken && validationResult.actionType === "Queue") {
             response.status = '302';
             response.statusDescription = 'Found';
             response.headers['location'] = [{
