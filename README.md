@@ -13,9 +13,18 @@ After returning  from the queue, the script will let user continue its request t
 
 ## Instruction
 
-- Set your CustomerId, SecretKey and API key in `index.js` file in ViewerRequest package
-- Create two lambda edge functions one for ViewerRequest and one for ViewerResponse and put the code from this repository there respectively. 
-- Define your desired behaviours where you want to be protected by queue and set CloudFront events  ViewerRequest and ViewerResponse to function you have already created.
+- Create a lambda edge function containing ViewerRequest folder and its content, ex.
+
+![ViewerRequestStructure](https://github.com/queueit/KnownUser.V3.Cloudfront/blob/master/ViewerRequestStructure.png)
+
+Remember to set your CustomerId, SecretKey and API key in the `index.js` file.
+
+- Create a lambda edge function containing ViewerResponse folder and its content, ex.
+
+![ViewerRequestStructure](https://github.com/queueit/KnownUser.V3.Cloudfront/blob/master/ViewerResponseStructure.png)
+
+- Define your desired CloudFront behaviours where you want to be protected by queue and set CloudFront events ViewerRequest and ViewerResponse to point to the two functions you just created.
+
 
 ### Protecting AJAX calls
 If you need to protect AJAX calls beside page loads you need to add the below JavaScript tags to your pages:
