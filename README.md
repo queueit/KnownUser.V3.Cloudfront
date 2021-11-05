@@ -25,7 +25,7 @@ Remember to set your CustomerId, SecretKey and API key in the `index.js` file.
 
 - Define your desired CloudFront behaviours where you want to be protected by queue and set CloudFront events ViewerRequest and ViewerResponse to point to the two functions you just created.
 
-** Plased make sure the code is living in the highest level in our lambda definition as it shown here 
+** Please make sure the code is living in the highest level in our lambda definition as it shown here. 
 
 ### Protecting AJAX calls
 If you need to protect AJAX calls beside page loads you need to add the below JavaScript tags to your pages:
