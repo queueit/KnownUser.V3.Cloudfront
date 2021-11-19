@@ -1,0 +1,22 @@
+{
+  "name": "@queue-it/cloudfront",
+  "version": "1.2.7",
+  "description": "KnownUserV3.Cloudfront",
+  "repository": "https://github.com/queueit/KnownUser.V3.Cloudfront",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "author": {
+    "name": "queue-it"
+  },
+  "dependencies": {
+    "queueit-knownuser": "^3.7.4"
+  },
+  "scripts": {},
+  "devDependencies": {},
+  "prepare": {
+    "queueit-knownuser/dist/index.js": {
+      "command": "browserify",
+      "output": "ViewerRequest/sdk/queueit-knownuserv3-sdk.js"
+    }
+  }
+}

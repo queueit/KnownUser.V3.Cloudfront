@@ -1,0 +1,8 @@
+**/node_modules
+.idea
+node_modules
+.vs
+obj
+bin
+*.zip
+dist

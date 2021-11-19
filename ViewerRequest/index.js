@@ -1,43 +1,60 @@
 ﻿'use strict';
-const CustomerId = "YOUR CUSTOMERID HERE";
-const SecretKey = "YOUR SECRETE KEY HERE";
-const APIKey = "YOUR API KEY HERE";
+const QUEUEIT_FAILED_HEADERNAME = "x-queueit-failed";
+const QUEUEIT_CONNECTOR_EXECUTED_HEADER_NAME = 'x-queueit-connector';
+const QUEUEIT_CONNECTOR_NAME = "cloudfront"
+
+let CustomerId = "YOUR CUSTOMERID HERE";
+let SecretKey = "YOUR SECRETE KEY HERE";
+let APIKey = "YOUR API KEY HERE";
 
 const querystringParser = require('querystring');
 const QueueIT = require("./sdk/queueit-knownuserv3-sdk.js");
-const knownUser = QueueIT.KnownUserV3.SDK.KnownUser;
+const knownUser = QueueIT.KnownUser;
 const httpContextProvider = require("./cloudFrontHttpContextProvider.js");
 const helpers = require("./queueitHelpers.js");
 const integrationConfigProvider = require("./integrationConfigProvider.js");
+
+exports.setIntegrationDetails = (customerId, secretKey, apiKey) => {
+    CustomerId = customerId;
+    SecretKey = secretKey;
+    APIKey = apiKey;
+}
 
 exports.handler = async (event, context, callback) => {
     const request = event.Records[0].cf.request;
     try {
         return await handleRequest(request);
-    }
-    catch (e) {
+    } catch (e) {
         let errorText = getErrorText(e);
+        setQueueItErrorHeaders(request, null);
         console.log("ERROR: Queue-it Connector " + errorText);
         return request;
     }
 };
 
 async function handleRequest(request) {
-    helpers.configureKnownUserHashing();
+    helpers.configureKnownUserHashing(QueueIT.Utils);
     const response = {
         headers: {}
-    };    
+    };
+    setQueueItHeaders(response);
+    if (isIgnored(request)) {
+        return request;
+    }
+
     let httpContext = httpContextProvider.getCloudFrontHttpContext(request, response);
     var queueitToken = querystringParser.parse(request.querystring)[knownUser.QueueITTokenKey];
     var requestUrl = httpContext.getHttpRequest().getAbsoluteUri();
     var requestUrlWithoutToken = requestUrl.replace(new RegExp("([\?&])(" + knownUser.QueueITTokenKey + "=[^&]*)", 'i'), "");
     requestUrlWithoutToken = requestUrlWithoutToken.replace(new RegExp("[?]$"), "");
-    var integrationConfig ="";
-    try{
+    var integrationConfig = "";
+
+    try {
         integrationConfig = await integrationConfigProvider.getConfig(CustomerId, APIKey);
-    }catch(e){
+    } catch (e) {
         let errorText = getErrorText(e);
-        console.log("ERROR: Donwloading config " + errorText);
+        setQueueItErrorHeaders(request, response);
+        console.log("ERROR: Downloading config " + errorText);
     }
 
     var validationResult = knownUser.validateRequestByIntegrationConfig(
@@ -65,13 +82,15 @@ async function handleRequest(request) {
         if (validationResult.isAjaxResult) {
             var headerName = validationResult.getAjaxQueueRedirectHeaderKey();
             // In case of ajax call send the user to the queue by sending a custom queue-it header and redirecting user to queue from javascript
-            response.headers[headerName] = [{ key: headerName, value: helpers.addKUPlatformVersion(validationResult.getAjaxRedirectUrl()) }];
+            response.headers[headerName] = [{
+                key: headerName,
+                value: helpers.addKUPlatformVersion(validationResult.getAjaxRedirectUrl())
+            }];
             response.status = '200';
             response.statusDescription = 'OK';
             return response;
 
-        }
-        else {
+        } else {
             // Send the user to the queue - either because hash was missing or because is was invalid
             response.status = '302';
             response.statusDescription = 'Found';
@@ -81,8 +100,7 @@ async function handleRequest(request) {
             }];
             return response;
         }
-    }
-    else {
+    } else {
         // Request can continue - we remove queueittoken form querystring parameter to avoid sharing of user specific token
         if (queueitToken && validationResult.actionType === "Queue") {
             response.status = '302';
@@ -92,22 +110,41 @@ async function handleRequest(request) {
                 value: requestUrlWithoutToken
             }];
             return response;
-        }
-        else {
+        } else {
             return request;
         }
     }
 }
 
-function getErrorText(e){
+function setQueueItHeaders(response) {
+    response.headers[QUEUEIT_CONNECTOR_EXECUTED_HEADER_NAME] = [
+        {key: QUEUEIT_CONNECTOR_EXECUTED_HEADER_NAME, value: QUEUEIT_CONNECTOR_NAME}
+    ];
+}
+
+function setQueueItErrorHeaders(request, response) {
+    request.headers['queueit-response-error'] = [
+        {key: 'queueit-response-error', value: 'true'}
+    ];
+
+    if (response) {
+        response.headers[QUEUEIT_FAILED_HEADERNAME] = [
+            {key: QUEUEIT_FAILED_HEADERNAME, value: 'true'}
+        ];
+    }
+}
+
+function isIgnored(request) {
+    return request.method === 'OPTIONS'
+        || request.method === 'HEAD';
+}
+
+function getErrorText(e) {
     let errorText = e;
-        if(e instanceof Error)
-        {
-            errorText = e.toString(); 
-        }
-        else if(typeof e == 'object')
-        {
-            errorText = JSON.stringify(e);
-        }
+    if (e instanceof Error) {
+        errorText = e.toString();
+    } else if (typeof e == 'object') {
+        errorText = JSON.stringify(e);
+    }
     return errorText;
 }

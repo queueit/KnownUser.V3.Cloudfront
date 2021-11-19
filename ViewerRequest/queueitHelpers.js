@@ -1,11 +1,11 @@
-const CLOUDFRONT_SDK_VERSION ="1.2.6";
-const QueueIT = require("./sdk/queueit-knownuserv3-sdk.js");
+const CLOUDFRONT_SDK_VERSION ="1.2.7";
+
 exports.addKUPlatformVersion= function(redirectQueueUrl)
 {
     return redirectQueueUrl + "&kupver=cloudfront-" + CLOUDFRONT_SDK_VERSION;
 }
-exports.configureKnownUserHashing= function() {
-    var utils = QueueIT.KnownUserV3.SDK.Utils;
+
+exports.configureKnownUserHashing= function(utils) {
     utils.generateSHA256Hash = function (secretKey, stringToHash) {
         const crypto = require('crypto');
         const hash = crypto.createHmac('sha256', secretKey)

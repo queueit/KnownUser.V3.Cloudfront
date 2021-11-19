@@ -12,7 +12,7 @@ exports.getConfig = async function (customerId, apiKey) {
             return;
         }
         const options = {
-            hostname: `${customerId}.queue-it.net`,
+            hostname: `${customerId}.test.queue-it.net`,
             path: `/status/integrationconfig/secure/${customerId}`,
             method: 'GET',
             headers: { 'api-key': apiKey},
