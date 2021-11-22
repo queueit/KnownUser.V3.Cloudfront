@@ -7,7 +7,7 @@ import {CloudFrontResultResponse} from "aws-lambda/common/cloudfront";
 export {setIntegrationDetails} from "./ViewerRequest"
 
 export async function onClientRequest(event: CloudFrontRequestEvent): Promise<CloudFrontResultResponse>{
-    return await onRequestHandler(event, null, null)
+    return await onRequestHandler(event)
 }
 
 export async function onClientResponse(event: CloudFrontRequestEvent): Promise<CloudFrontResponse>{

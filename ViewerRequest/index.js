@@ -2,6 +2,7 @@
 const QUEUEIT_FAILED_HEADERNAME = "x-queueit-failed";
 const QUEUEIT_CONNECTOR_EXECUTED_HEADER_NAME = 'x-queueit-connector';
 const QUEUEIT_CONNECTOR_NAME = "cloudfront"
+const SHOULD_IGNORE_OPTIONS_REQUESTS = false;
 
 let CustomerId = "YOUR CUSTOMERID HERE";
 let SecretKey = "YOUR SECRETE KEY HERE";
@@ -20,7 +21,7 @@ exports.setIntegrationDetails = (customerId, secretKey, apiKey) => {
     APIKey = apiKey;
 }
 
-exports.handler = async (event, context, callback) => {
+exports.handler = async (event) => {
     const request = event.Records[0].cf.request;
     try {
         return await handleRequest(request);
@@ -38,12 +39,13 @@ async function handleRequest(request) {
         headers: {}
     };
     setQueueItHeaders(response);
+
     if (isIgnored(request)) {
         return request;
     }
 
     let httpContext = httpContextProvider.getCloudFrontHttpContext(request, response);
-    var queueitToken = querystringParser.parse(request.querystring)[knownUser.QueueITTokenKey];
+    const queueitToken = getQueueItToken(request, httpContext);
     var requestUrl = httpContext.getHttpRequest().getAbsoluteUri();
     var requestUrlWithoutToken = requestUrl.replace(new RegExp("([\?&])(" + knownUser.QueueITTokenKey + "=[^&]*)", 'i'), "");
     requestUrlWithoutToken = requestUrlWithoutToken.replace(new RegExp("[?]$"), "");
@@ -116,6 +118,16 @@ async function handleRequest(request) {
     }
 }
 
+function getQueueItToken(request, httpContext) {
+    let queueItToken = querystringParser.parse(request.querystring)[knownUser.QueueITTokenKey];
+    if (queueItToken) {
+        return queueItToken;
+    }
+
+    const tokenHeaderName = `x-${knownUser.QueueITTokenKey}`;
+    return httpContext.getHttpRequest().getHeader(tokenHeaderName);
+}
+
 function setQueueItHeaders(response) {
     response.headers[QUEUEIT_CONNECTOR_EXECUTED_HEADER_NAME] = [
         {key: QUEUEIT_CONNECTOR_EXECUTED_HEADER_NAME, value: QUEUEIT_CONNECTOR_NAME}
@@ -135,8 +147,7 @@ function setQueueItErrorHeaders(request, response) {
 }
 
 function isIgnored(request) {
-    return request.method === 'OPTIONS'
-        || request.method === 'HEAD';
+    return SHOULD_IGNORE_OPTIONS_REQUESTS && request.method === 'OPTIONS';
 }
 
 function getErrorText(e) {
