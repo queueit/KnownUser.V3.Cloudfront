@@ -29,7 +29,7 @@ you want end-users to queue up for. For this to work, you will need to contact q
 your GO Queue-it platform account.  
 Once enabled, you will need to check the `Include body` checkbox in the `Viewer request` function associations. This can
 be done by editing your CloudFront distribution behaviors.
-[Function associations](https://github.com/queueit/KnownUser.V3.Cloudfront/blob/main/FunctionAssociations.png)
+![Function associations](https://github.com/queueit/KnownUser.V3.Cloudfront/blob/master/FunctionAssociations.png)
 
 ## Instruction
 
