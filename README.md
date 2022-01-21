@@ -102,3 +102,4 @@ If you need to protect AJAX calls beside page loads you need to add the below Ja
 ```
 
 > Please contact [queue-it support](https://support.queue-it.com/hc/en-us) for further information and intruction.
+
