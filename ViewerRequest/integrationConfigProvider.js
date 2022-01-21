@@ -1,4 +1,3 @@
-
 const https = require("https");
 
 const CacheTimeoutMS = 5 * 60 * 1000;
@@ -12,10 +11,10 @@ exports.getConfig = async function (customerId, apiKey) {
             return;
         }
         const options = {
-            hostname: `${customerId}.test.queue-it.net`,
+            hostname: `${customerId}.queue-it.net`,
             path: `/status/integrationconfig/secure/${customerId}`,
             method: 'GET',
-            headers: { 'api-key': apiKey},
+            headers: {'api-key': apiKey},
             port: 443
         };
         let request = https.get(options, (resp) => {
@@ -26,14 +25,13 @@ exports.getConfig = async function (customerId, apiKey) {
             });
             resp.on('end', () => {
                 if (resp.statusCode == 200) {
-                        var newCached = {
-                            expirationTime:  (Date.now()) + CacheTimeoutMS,
-                            integrationConfig: data
-                        };                        
-                        GlobalCache = newCached;
-                        resolve(GlobalCache.integrationConfig);
-                }
-                else {
+                    var newCached = {
+                        expirationTime: (Date.now()) + CacheTimeoutMS,
+                        integrationConfig: data
+                    };
+                    GlobalCache = newCached;
+                    resolve(GlobalCache.integrationConfig);
+                } else {
                     reject(new Error(data));
                 }
             });
@@ -45,9 +43,7 @@ exports.getConfig = async function (customerId, apiKey) {
                 if (GlobalCache) {
                     console.log(timeoutMessage + ' (using old config)');
                     resolve(GlobalCache.integrationConfig);
-                }
-                else
-                {
+                } else {
                     reject(new Error(timeoutMessage));
                 }
             }

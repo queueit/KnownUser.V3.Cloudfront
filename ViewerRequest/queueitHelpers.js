@@ -1,4 +1,4 @@
-const CLOUDFRONT_SDK_VERSION ="1.2.8";
+const CLOUDFRONT_SDK_VERSION ="1.2.9";
 
 exports.addKUPlatformVersion= function(redirectQueueUrl)
 {

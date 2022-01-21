@@ -5,7 +5,7 @@ const QUEUEIT_CONNECTOR_NAME = "cloudfront"
 const SHOULD_IGNORE_OPTIONS_REQUESTS = false;
 
 let CustomerId = "YOUR CUSTOMERID HERE";
-let SecretKey = "YOUR SECRETE KEY HERE";
+let SecretKey = "YOUR SECRET KEY HERE";
 let APIKey = "YOUR API KEY HERE";
 
 const querystringParser = require('querystring');
@@ -82,11 +82,15 @@ async function handleRequest(request) {
             }];
 
         if (validationResult.isAjaxResult) {
-            var headerName = validationResult.getAjaxQueueRedirectHeaderKey();
+            let headerName = validationResult.getAjaxQueueRedirectHeaderKey();
             // In case of ajax call send the user to the queue by sending a custom queue-it header and redirecting user to queue from javascript
             response.headers[headerName] = [{
                 key: headerName,
                 value: helpers.addKUPlatformVersion(validationResult.getAjaxRedirectUrl())
+            }];
+            response.headers['Access-Control-Expose-Headers'] = [{
+                key: 'Access-Control-Expose-Headers',
+                value: headerName
             }];
             response.status = '200';
             response.statusDescription = 'OK';
