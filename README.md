@@ -1,4 +1,4 @@
-﻿﻿# KnownUser.V3.Cloudfront
+# KnownUser.V3.Cloudfront
 [![npm version](https://badge.fury.io/js/@queue-it%2Fcloudfront.svg)](https://badge.fury.io/js/@queue-it%2Fcloudfront)
 
 The Queue-it Security Framework is used to ensure that end users cannot reach to your protected backend routes without
