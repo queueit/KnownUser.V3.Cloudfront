@@ -34,7 +34,6 @@ exports.handler = async (event) => {
 };
 
 async function handleRequest(request) {
-    helpers.configureKnownUserHashing(QueueIT.Utils);
     const response = {
         headers: {}
     };
