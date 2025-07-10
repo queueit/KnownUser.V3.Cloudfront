@@ -1,4 +1,7 @@
 # KnownUser.V3.Cloudfront
+
+**This is not the most recent version. In order to obtain access to the most recent version, please contact your local Queue-it representative or Queue-it Support**
+
 Before getting started please read the [documentation](https://github.com/queueit/Documentation/tree/main/edge-connectors) to get acquainted with edge connectors.
 
 This repository contains two AWS lambda functions you can add to your CloudFront distribution events ViewerRequest and ViewerResponse 
